@@ -26,7 +26,6 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 	NSDate *now = [NSDate date];
 	NSTimeInterval t = [now timeIntervalSinceDate:self.startTime];
 	BOOL muted = (t > 0.1)? NO : YES;
-	self.completionBlk(t, muted);
 	if( muted ){
 		AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 	}
@@ -45,7 +44,7 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 }
 
 
--(instancetype)initWithCompletionBlk:(MuteCheckCompletionHandler)completionBlk{
+-(instancetype)initWithCompletionBlk{
 	self = [self init];
 	if (self) {
 		NSURL* url = [[NSBundle mainBundle] URLForResource:@"message" withExtension:@"aif"];
@@ -53,7 +52,6 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 			AudioServicesAddSystemSoundCompletion(self.soundId, CFRunLoopGetMain(), kCFRunLoopDefaultMode, MuteCheckCompletionProc,(__bridge void *)(self));
 			UInt32 yes = 1;
 			AudioServicesSetProperty(kAudioServicesPropertyIsUISound, sizeof(_soundId),&_soundId,sizeof(yes), &yes);
-			self.completionBlk = completionBlk;
 		} else {
 			NSLog(@"error setting up Sound ID");
 		}
