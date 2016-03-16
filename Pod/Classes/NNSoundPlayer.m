@@ -3,11 +3,7 @@
 void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData);
 
 @interface NNSoundPlayer ()
-
-@property (nonatomic, strong)NSDate *startTime;
-
 -(void)completed;
-
 @end
 
 void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
@@ -22,16 +18,17 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 
 @implementation NNSoundPlayer{
 	SystemSoundID _soundId;
+	NSDate* _startTime;
 }
 
 -(void)playMuteSound{
-	self.startTime = [NSDate date];
+	_startTime = [NSDate date];
 	AudioServicesPlaySystemSound(_soundId);
 }
 
 -(void)completed{
 	NSDate *now = [NSDate date];
-	NSTimeInterval t = [now timeIntervalSinceDate:self.startTime];
+	NSTimeInterval t = [now timeIntervalSinceDate:_startTime];
 	BOOL muted = (t > 0.1)? NO : YES;
 	if( muted ){
 		AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
@@ -39,11 +36,11 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 }
 
 -(void)check{
-	if (self.startTime == nil) {
+	if (_startTime == nil) {
 		[self playMuteSound];
 	} else {
 		NSDate *now = [NSDate date];
-		NSTimeInterval lastCheck = [now timeIntervalSinceDate:self.startTime];
+		NSTimeInterval lastCheck = [now timeIntervalSinceDate:_startTime];
 		if (lastCheck > 1) {	//prevent checking interval shorter then the sound length
 			[self playMuteSound];
 		}
