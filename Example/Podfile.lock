@@ -1,0 +1,14 @@
+PODS:
+  - NNSoundPlayer (0.1.0)
+
+DEPENDENCIES:
+  - NNSoundPlayer (from `../`)
+
+EXTERNAL SOURCES:
+  NNSoundPlayer:
+    :path: ../
+
+SPEC CHECKSUMS:
+  NNSoundPlayer: fc10686a947927e5270c2052a3f6213780a73fdd
+
+COCOAPODS: 0.38.2
