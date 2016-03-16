@@ -15,12 +15,12 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-	_player = [[NNSoundPlayer alloc] initWithCompletionBlk];
+	_player = [[NNSoundPlayer alloc] initWithName:@"message" type:@"aif"];
 }
 
 
 -(IBAction)hoge:(id)sender{
-	[_player check];
+	[_player play];
 }
 
 

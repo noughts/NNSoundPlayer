@@ -6,9 +6,9 @@
 	NSDate* _startTime;
 }
 
--(instancetype)initWithCompletionBlk{
+-(instancetype)initWithName:(NSString*)name type:(NSString*)type{
 	if( self = [self init] ){
-		NSURL* url = [[NSBundle mainBundle] URLForResource:@"message" withExtension:@"aif"];
+		NSURL* url = [[NSBundle mainBundle] URLForResource:name withExtension:type];
 		if( !url ){
 			NSLog( @"音声ファイルがロードできません。Project Navigator でファイルを選択し、File Inspector の Target Membership で利用したいTargetにチェックが入っているか確認しましょう。" );
 			return self;

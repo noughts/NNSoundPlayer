@@ -14,7 +14,7 @@
 @interface NNSoundPlayer : NSObject
 
 
--(instancetype)initWithCompletionBlk;
+-(instancetype)initWithName:(NSString*)name type:(NSString*)type;
 -(void)play;
 
 @end
