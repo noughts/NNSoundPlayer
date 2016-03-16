@@ -21,7 +21,7 @@
                                 <rect key="frame" x="137" y="269" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <action selector="hoge:" destination="whP-gf-Uak" eventType="touchUpInside" id="uPj-hi-35K"/>
+                                    <action selector="hoge:" destination="whP-gf-Uak" eventType="touchDown" id="lZh-js-M3i"/>
                                 </connections>
                             </button>
                         </subviews>
