@@ -4,7 +4,6 @@
    - NNSoundPlayer がインスタンスのメンバとして定義されているか？
      関数内で初期化してもすぐにdeallocされてしまいます。
  
- //音声ファイルがロードできません。Project Navigator でファイルを選択し、File Inspector の Target Membership で利用したいTargetにチェックが入っているか確認しましょう。
 */
 
 
@@ -16,6 +15,6 @@
 
 
 -(instancetype)initWithCompletionBlk;
--(void)check;
+-(void)play;
 
 @end
