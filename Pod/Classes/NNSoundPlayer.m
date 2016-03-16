@@ -15,11 +15,18 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 	[obj completed];
 }
 
-@implementation NNSoundPlayer
+
+
+
+
+
+@implementation NNSoundPlayer{
+	SystemSoundID _soundId;
+}
 
 -(void)playMuteSound{
 	self.startTime = [NSDate date];
-	AudioServicesPlaySystemSound(self.soundId);
+	AudioServicesPlaySystemSound(_soundId);
 }
 
 -(void)completed{
@@ -49,7 +56,7 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 	if (self) {
 		NSURL* url = [[NSBundle mainBundle] URLForResource:@"message" withExtension:@"aif"];
 		if (AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &_soundId) == kAudioServicesNoError){
-			AudioServicesAddSystemSoundCompletion(self.soundId, CFRunLoopGetMain(), kCFRunLoopDefaultMode, MuteCheckCompletionProc,(__bridge void *)(self));
+			AudioServicesAddSystemSoundCompletion(_soundId, CFRunLoopGetMain(), kCFRunLoopDefaultMode, MuteCheckCompletionProc,(__bridge void *)(self));
 			UInt32 yes = 1;
 			AudioServicesSetProperty(kAudioServicesPropertyIsUISound, sizeof(_soundId),&_soundId,sizeof(yes), &yes);
 		} else {
@@ -61,9 +68,9 @@ void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
 
 
 - (void)dealloc{
-	if (self.soundId != -1){
-		AudioServicesRemoveSystemSoundCompletion(self.soundId);
-		AudioServicesDisposeSystemSoundID(self.soundId);
+	if (_soundId != -1){
+		AudioServicesRemoveSystemSoundCompletion(_soundId);
+		AudioServicesDisposeSystemSoundID(_soundId);
 	}
 }
 
