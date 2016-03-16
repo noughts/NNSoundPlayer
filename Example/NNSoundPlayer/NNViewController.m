@@ -7,23 +7,22 @@
 //
 
 #import "NNViewController.h"
+#import <NNSoundPlayer.h>
 
-@interface NNViewController ()
+@implementation NNViewController{
+	NNSoundPlayer* _player;
+}
 
-@end
-
-@implementation NNViewController
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	_player = [[NNSoundPlayer alloc] initWithName:@"message" type:@"aif"];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+-(IBAction)hoge:(id)sender{
+	
+	[_player play];
 }
+
 
 @end
