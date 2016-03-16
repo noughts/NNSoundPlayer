@@ -10,9 +10,10 @@
 @import Foundation;
 @import AudioToolbox;
 
-
 @interface NNSoundPlayer : NSObject
 
+/// サイレントモード時にバイブを鳴らすかどうか
+@property BOOL vibrateIfInSilentMode;
 
 -(instancetype)initWithName:(NSString*)name type:(NSString*)type;
 -(void)play;

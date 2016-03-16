@@ -16,6 +16,7 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
 	_player = [[NNSoundPlayer alloc] initWithName:@"message" type:@"aif"];
+	_player.vibrateIfInSilentMode = YES;
 }
 
 

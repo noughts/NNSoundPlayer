@@ -41,12 +41,12 @@
 -(void)play{
 	if (_startTime == nil) {
 		[self playInternal];
-	} else {
-		NSDate *now = [NSDate date];
-		NSTimeInterval lastCheck = [now timeIntervalSinceDate:_startTime];
-		if (lastCheck > 1) {	//prevent checking interval shorter then the sound length
-			[self playInternal];
-		}
+		return;
+	}
+	NSDate *now = [NSDate date];
+	NSTimeInterval lastCheck = [now timeIntervalSinceDate:_startTime];
+	if (lastCheck > 1) {	//prevent checking interval shorter then the sound length
+		[self playInternal];
 	}
 }
 
@@ -67,7 +67,7 @@
 	NSDate *now = [NSDate date];
 	NSTimeInterval t = [now timeIntervalSinceDate:_startTime];
 	BOOL muted = (t > 0.1)? NO : YES;
-	if( muted ){
+	if( muted && _vibrateIfInSilentMode ){
 		AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 	}
 }
