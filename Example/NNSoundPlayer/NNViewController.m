@@ -15,13 +15,15 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-	_player = [[NNSoundPlayer alloc] initWithName:@"message" type:@"aif"];
+	_player = [[NNSoundPlayer alloc] initWithCompletionBlk:^(NSTimeInterval lapse, BOOL muted) {
+		NSLog(@"lapsed: %f", lapse);
+		NSLog(@"muted: %d", muted);
+	}];
 }
 
 
 -(IBAction)hoge:(id)sender{
-	
-	[_player play];
+	[_player check];
 }
 
 

@@ -1,60 +1,72 @@
-//
-//  NNSoundPlayer.m
-//  Pods
-//
-//  Created by noughts on 2016/03/16.
-//
-//
-
 #import "NNSoundPlayer.h"
 
+void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData);
 
-@implementation NNSoundPlayer{
-	AVAudioPlayer* _player;
+@interface NNSoundPlayer ()
+
+@property (nonatomic, strong)NSDate *startTime;
+
+-(void)completed;
+
+@end
+
+void MuteCheckCompletionProc(SystemSoundID ssID, void* clientData){
+	NNSoundPlayer *obj = (__bridge NNSoundPlayer *)clientData;
+	[obj completed];
 }
 
--(instancetype)initWithName:(NSString*)name type:(NSString*)type{
-	if( self = [super init] ){
-		NSString* str = [[NSBundle mainBundle] pathForResource:name ofType:type];
-		if( !str ){
-			NSLog( @"音声ファイルがロードできません。Project Navigator でファイルを選択し、File Inspector の Target Membership で利用したいTargetにチェックが入っているか確認しましょう。" );
-			return self;
+@implementation NNSoundPlayer
+
+-(void)playMuteSound{
+	self.startTime = [NSDate date];
+	AudioServicesPlaySystemSound(self.soundId);
+}
+
+-(void)completed{
+	NSDate *now = [NSDate date];
+	NSTimeInterval t = [now timeIntervalSinceDate:self.startTime];
+	BOOL muted = (t > 0.1)? NO : YES;
+	self.completionBlk(t, muted);
+	if( muted ){
+		AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	}
+}
+
+-(void)check{
+	if (self.startTime == nil) {
+		[self playMuteSound];
+	} else {
+		NSDate *now = [NSDate date];
+		NSTimeInterval lastCheck = [now timeIntervalSinceDate:self.startTime];
+		if (lastCheck > 1) {	//prevent checking interval shorter then the sound length
+			[self playMuteSound];
 		}
-		NSURL* url = [NSURL URLWithString:str];
-		NSError* error = nil;
-		_player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-		if( error ){
-			NSLog( @"%@", error );
+	}
+}
+
+
+-(instancetype)initWithCompletionBlk:(MuteCheckCompletionHandler)completionBlk{
+	self = [self init];
+	if (self) {
+		NSURL* url = [[NSBundle mainBundle] URLForResource:@"message" withExtension:@"aif"];
+		if (AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &_soundId) == kAudioServicesNoError){
+			AudioServicesAddSystemSoundCompletion(self.soundId, CFRunLoopGetMain(), kCFRunLoopDefaultMode, MuteCheckCompletionProc,(__bridge void *)(self));
+			UInt32 yes = 1;
+			AudioServicesSetProperty(kAudioServicesPropertyIsUISound, sizeof(_soundId),&_soundId,sizeof(yes), &yes);
+			self.completionBlk = completionBlk;
+		} else {
+			NSLog(@"error setting up Sound ID");
 		}
-		_player.delegate = self;
-		[_player prepareToPlay];
 	}
 	return self;
 }
 
--(void)dealloc{
-	
-}
 
--(void)play{
-	[_player play];
-	NSLog(@"start");
+- (void)dealloc{
+	if (self.soundId != -1){
+		AudioServicesRemoveSystemSoundCompletion(self.soundId);
+		AudioServicesDisposeSystemSoundID(self.soundId);
+	}
 }
-
-#pragma mark - AVAudioPlayerDelegate
-
--(void)audioPlayerBeginInterruption:(AVAudioPlayer *)player{
-	
-}
--(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error{
-	
-}
--(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
-	NSLog(@"finish");
-}
--(void)audioPlayerEndInterruption:(AVAudioPlayer *)player withOptions:(NSUInteger)flags{
-	
-}
-
 
 @end
